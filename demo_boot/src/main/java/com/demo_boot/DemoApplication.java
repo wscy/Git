@@ -1,4 +1,4 @@
-package com.demo_boot;
+﻿package com.demo_boot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,7 +30,7 @@ public class DemoApplication extends SpringBootServletInitializer{
 //        System.out.println("a后面第k个素数是："+list.get(k-1)+"-----------------");
 
 
-//	    Integer a=-128;
+//	kkk    Integer a=-128;
 //	    Integer b=-128;
 //	    Integer c=new Integer(-128);
 //        Integer d=Integer.valueOf(-128);
