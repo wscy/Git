@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo_boot.Mapper.StudentMapper">
+    <!--登陆-->
+<select id="selectByName" resultType="com.demo_boot.Entiry.Student">
+    SELECT * FROM student WHERE s_name=#{userName};
+</select>
+
+    <!--&lt;!&ndash;查找学生表&ndash;&gt;-->
+    <!--<resultMap id="student" type="com.demo_boot.model.StudentVO">-->
+        <!--<result property="sId" column="s_id"/>-->
+        <!--<result property="sName" column="s_name"/>-->
+    <!--</resultMap>-->
+    <!--&lt;!&ndash;查找成绩表&ndash;&gt;-->
+    <!--<resultMap id="score" type="com.demo_boot.Entiry.ScoreEntity">-->
+        <!--<result property="sId" column="s_id"/>-->
+        <!--<result property="cId" column="c_id"/>-->
+        <!--<result property="sScore" column="s_score"/>-->
+    <!--</resultMap>-->
+    <!--&lt;!&ndash;查找教师表&ndash;&gt;-->
+    <!--<resultMap id="teachaer" type="com.demo_boot.Entiry.TeacherEntity">-->
+        <!--<result property="tId" column="t_id"/>-->
+        <!--<result property="tName" column="t_name"/>-->
+    <!--</resultMap>-->
+    <!--&lt;!&ndash;查找课程表&ndash;&gt;-->
+    <!--<resultMap id="course" type="com.demo_boot.Entiry.CourseEntity">-->
+        <!--<result property="cId" column="c_id"/>-->
+        <!--<result property="cName" column="c_name"/>-->
+        <!--<result property="tId" column="t_id"/>-->
+    <!--</resultMap>-->
+    <!--&lt;!&ndash;查找成绩，教师，分数信息&ndash;&gt;-->
+    <!--<resultMap id="addMessage" type="com.demo_boot.model.StudentMessageDTO">-->
+        <!--<association property="courseEntity" javaType="com.demo_boot.Entiry.CourseEntity">-->
+            <!--<result property="cName" column="c_name"/>-->
+        <!--</association>-->
+        <!--<association property="scoreEntity" javaType="com.demo_boot.Entiry.ScoreEntity">-->
+            <!--<result property="sScore" column="s_score"/>-->
+        <!--</association>-->
+        <!--<association property="teacherEntiry" javaType="com.demo_boot.Entiry.TeacherEntity">-->
+            <!--<result property="tName" column="t_name"/>-->
+        <!--</association>-->
+    <!--</resultMap>-->
+    <!--返回前端的总的学生信息-->
+    <!--<resultMap id="allMessage" type="com.demo_boot.dto.StudentAllDTOO">-->
+        <!--<association property="studentVO" javaType="com.demo_boot.model.StudentVO">-->
+            <!--<result property="sId" column="s_id"/>-->
+            <!--<result property="sName" column="s_name"/>-->
+        <!--</association>-->
+        <!--<collection property="studentMessageDTO" ofType="com.demo_boot.model.StudentMessageDTO" javaType="java.util.ArrayList">-->
+            <!--<association property="courseEntity"  javaType="java.util.ArrayList">-->
+                <!--<result property="cName" column="c_name"/>-->
+            <!--</association>-->
+            <!--<association property="scoreEntity" javaType="java.util.ArrayList">-->
+                <!--<result property="sScore" column="s_score"/>-->
+            <!--</association>-->
+            <!--<association property="teacherEntity" javaType="java.util.ArrayList">-->
+                <!--<result property="tName" column="t_name"/>-->
+            <!--</association>-->
+        <!--</collection>-->
+    <!--</resultMap>-->
+    <!--查询学生信息-->
+    <resultMap id="studentALL" type="com.demo_boot.dto.StudentAllDTO">
+        <result column="s_id" property="sId"/>
+        <result column="s_name" property="sName"/>
+        <collection property="sScore" ofType="java.lang.Integer" javaType="java.util.ArrayList">
+            <result column="s_score" property="sScore"/>
+        </collection>
+        <collection property="cName" ofType="java.lang.String" javaType="java.util.ArrayList">
+            <result column="c_name" property="cName"/>
+        </collection>
+        <collection property="tName" ofType="java.lang.String" javaType="java.util.ArrayList">
+            <result column="t_name" property="tName"/>
+        </collection>
+    </resultMap>
+    <select id="findStudentMessage" resultMap="studentALL">
+        SELECT stu.s_id,stu.s_name,sc.s_score,co.c_name,tea.t_name FROM
+         student stu
+        JOIN score sc ON stu.s_id=sc.s_id
+        LEFT JOIN course co ON sc.c_id=co.c_id
+        LEFT JOIN teacher tea ON co.t_id=tea.t_id
+        WHERE stu.s_name=#{userName}
+        ORDER BY stu.s_id;
+    </select>
+    <!--换一种方法定义resultMap-->
+    <resultMap id="StudentNew" type="com.demo_boot.dto.StudentMessageDTO">
+        <result column="s_id" property="sId"/>
+        <result column="s_name" property="sName"/>
+        <!--下面是map-->
+        <collection property="detail" ofType="com.demo_boot.dto.TeacherAndCourseDTO" javaType="java.util.ArrayList">
+            <result column="t_name" property="tName"/>
+            <result column="s_score" property="sScore"/>
+            <result column="c_name" property="cName"/>
+        </collection>
+    </resultMap>
+        <select id="findStudentMessage01" resultMap="StudentNew">
+            SELECT
+st.s_name,
+co.c_name,
+sc.s_score,
+te.t_name
+FROM
+score sc
+LEFT JOIN
+student st
+ON
+sc.s_id=st.s_id
+LEFT JOIN
+ course co
+ ON
+sc.c_id=co.c_id
+LEFT JOIN
+teacher te
+ON
+co.t_id=te.t_id
+WHERE
+st.s_name=#{userName};
+      </select>
+</mapper>
